@@ -92,6 +92,10 @@ def render(filas: list[FilaIPER], filtradas: list[FilaIPER] | None = None) -> No
         st.caption(
             f"{len(filas)} peligros · hojas **Matriz IPER**, **Criterios** y **Resumen**."
         )
+        st.caption(
+            "💡 El archivo se guarda en la carpeta **Descargas** de tu navegador. "
+            "Si no aparece, revisa el panel de descargas del navegador."
+        )
     with col2:
         if filtradas is not None and len(filtradas) and len(filtradas) != len(filas):
             st.download_button(
