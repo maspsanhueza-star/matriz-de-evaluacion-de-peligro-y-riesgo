@@ -75,7 +75,8 @@ idéntica al Excel de referencia), lo que produce magnitudes entre **1 y 64**.
 │       └── estilos.py         # Tarjetas de riesgo y estilos de tabla
 ├── tests/
 │   ├── test_risk.py           # Metodología y modelo de datos
-│   └── test_excel.py          # Exportación openpyxl
+│   ├── test_excel.py          # Exportación openpyxl
+│   └── test_app.py            # Pruebas de humo de la UI (AppTest)
 └── data/                      # Respaldos locales (excluidos de git)
 ```
 
