@@ -11,7 +11,10 @@ import streamlit as st
 
 from iper import storage
 from iper.config import META_POR_DEFECTO
+from iper.excel_export import construir_libro, nombre_archivo
 from iper.ui import criterios, exportacion, formulario, resumen, vista_previa
+
+_MIME_XLSX = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 
 # ---------------------------------------------------------------------------
 # Configuración de página
@@ -54,21 +57,46 @@ st.markdown(
 # Encabezado
 # ---------------------------------------------------------------------------
 
-st.markdown(
-    """
-    <div class="cabecera-miper">
-        <h1 style="margin-bottom:0;">🦺 MIPER — Matriz de Identificación de Peligros
-        y Evaluación de Riesgos</h1>
-        <p style="color:#666; margin-top:4px;">
-            Metodología P × C de 4 niveles · Ley 16.744 · D.S. 40 · D.S. 44 · D.S. 594
-        </p>
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
-
 filas = storage.filas()
 meta = storage.meta()
+
+
+def _libro_excel() -> bytes:
+    """Genera el Excel solo al pulsar el botón (carga diferida).
+
+    De este modo el encabezado no cuesta tiempo: el libro se arma recién
+    cuando el usuario solicita la descarga.
+    """
+    return construir_libro(storage.filas(), storage.meta())
+
+
+col_titulo, col_descarga = st.columns([3.2, 1], vertical_alignment="center")
+
+with col_titulo:
+    st.markdown(
+        """
+        <div class="cabecera-miper">
+            <h1 style="margin-bottom:0;">🦺 MIPER — Matriz de Identificación de Peligros
+            y Evaluación de Riesgos</h1>
+            <p style="color:#666; margin-top:4px;">
+                Metodología P × C de 4 niveles · Ley 16.744 · D.S. 40 · D.S. 44 · D.S. 594
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+with col_descarga:
+    st.download_button(
+        "⬇️ Descargar Excel",
+        data=_libro_excel,
+        file_name=nombre_archivo(meta),
+        mime=_MIME_XLSX,
+        type="primary",
+        width="stretch",
+        help="Descarga la matriz completa en Excel, con colores por criticidad.",
+    )
+    st.caption(f"{len(filas)} peligro(s) en la matriz")
 
 # ---------------------------------------------------------------------------
 # Barra lateral
