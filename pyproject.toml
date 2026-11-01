@@ -1,0 +1,6 @@
+[tool.pytest.ini_options]
+# Asegura que ``import iper`` funcione también cuando pytest se ejecuta como
+# binario (``pytest -q``), no solo como módulo (``python -m pytest``).
+pythonpath = ["."]
+testpaths = ["tests"]
+addopts = "-ra"
